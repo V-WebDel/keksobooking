@@ -1,3 +1,6 @@
 import {similarOffer} from './data.js';
+import {renderAdvertisement} from './render.js';
+import {stateForm} from './form.js';
 
-console.log(similarOffer());
+renderAdvertisement(similarOffer());
+stateForm();
