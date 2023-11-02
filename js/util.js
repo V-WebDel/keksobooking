@@ -2,7 +2,7 @@ function getRandomNumber(min, max, digits = 1) {
   const lower = Math.min(Math.abs(min), Math.abs(max));
   const upper = Math.max(Math.abs(min), Math.abs(max));
 
-  const randomNumber = Math.random() * (upper - lower + 1) + lower;
+  const randomNumber = Math.random() * (upper - lower) + lower;
 
   return +randomNumber.toFixed(digits);
 }

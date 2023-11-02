@@ -11,7 +11,7 @@ const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'condit
 const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
 const createAuthor = () => {
-  const randomAvatar = AVATAR[getRandomNumber(0, AVATAR.length - 2, 0)];
+  const randomAvatar = AVATAR[getRandomNumber(0, AVATAR.length - 1, 0)];
 
   return {
     avatar: `img/avatars/user${randomAvatar}.png`,
@@ -19,17 +19,17 @@ const createAuthor = () => {
 };
 
 const createOffer = () => {
-  const randomTitleDescription = getRandomNumber(0, TITLE.length - 2, 0);
+  const randomTitleDescription = getRandomNumber(0, TITLE.length - 1, 0);
   const randomTitle = TITLE[randomTitleDescription];
   const randomDescription = DESCRIPTION[randomTitleDescription];
   const randomLat = getRandomNumber(35.65000, 35.70000, 5);
   const randomLng = getRandomNumber(139.70000, 139.80000, 5);
-  const randomCheckin = CHECKIN[getRandomNumber(0, CHECKIN.length - 2, 0)];
+  const randomCheckin = CHECKIN[getRandomNumber(0, CHECKIN.length - 1, 0)];
   // const randomCheckout = getRandomNumber(0, CHECKOUT.length - 1, 0);
 
   const randomType = TYPE[getRandomNumber(0, TYPE.length - 1, 0)];
   const randomFeatures = getRandomElements(FEATURES);
-  const randomPhotos = getRandomNumber(0, PHOTOS.length - 1, 0);
+  const randomPhotos = getRandomElements(PHOTOS);
 
   return {
     title: randomTitle,
@@ -42,7 +42,7 @@ const createOffer = () => {
     checkin: randomCheckin,
     checkout: randomCheckin,
     features: randomFeatures,
-    photos: PHOTOS.slice(0, randomPhotos),
+    photos: randomPhotos,
   };
 };
 

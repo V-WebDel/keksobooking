@@ -49,12 +49,11 @@ const renderAdvertisement = (ads) => {
     }
 
     const advDescription = advElement.querySelector('.popup__description');
-    if (offer.checkin !== '' || offer.checkout !== '') {
+    if (offer.description !== '') {
       advDescription.textContent = offer.description;
     } else {
       advDescription.hidden = true;
     }
-
 
     const TYPES = {flat: 'Квартира', bungalow: 'Бунгало', house: 'Дом', palace: 'Дворец', hotel: 'Отель'};
 
@@ -70,7 +69,6 @@ const renderAdvertisement = (ads) => {
     }
     const featuresList = featuresContainer.querySelectorAll('.popup__feature');
     const modifiers = offer.features.map((features) => `popup__feature--${features}`);
-
 
     featuresList.forEach((itemFeatures) => {
       const modifier = itemFeatures.classList[1];
