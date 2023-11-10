@@ -10,6 +10,7 @@ const CHECKIN = ['12:00', '13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
+
 const createAuthor = () => {
   const randomAvatar = AVATAR[getRandomNumber(0, AVATAR.length - 1, 0)];
 
@@ -34,7 +35,7 @@ const createOffer = () => {
   return {
     title: randomTitle,
     description: randomDescription,
-    address: `${randomLat}, ${randomLng}`,
+    address: [randomLat, randomLng],
     price: getRandomNumber(100, 2000, 0),
     type: randomType,
     rooms: getRandomNumber(1, 10, 0),
@@ -57,6 +58,7 @@ const createObject = () => {
 };
 
 
-const similarOffer = () => Array.from({length: 1}, createObject);
+// const similarOffer = () => Array.from({length: 10}, createObject);
+const similarOffer = Array.from({length: 10}, createObject);
 
 export {similarOffer};

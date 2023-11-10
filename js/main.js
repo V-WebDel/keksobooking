@@ -1,6 +1,7 @@
-import {similarOffer} from './data.js';
-import {renderAdvertisement} from './render.js';
-import {stateForm} from './form.js';
+import { deactivateForm, address } from './form.js';
+import { loadMap, getMarkerCoords, marker } from './map.js';
 
-renderAdvertisement(similarOffer());
-// stateForm();
+deactivateForm();
+
+loadMap();
+getMarkerCoords(address, marker);

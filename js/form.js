@@ -1,10 +1,14 @@
 const adForm = document.querySelector('.ad-form');
+const formElements = adForm.querySelectorAll('input, button, select, textarea, fieldset');
+const mapFilters = document.querySelector('.map__filters');
+const mapFiltersElements = mapFilters.querySelectorAll('input, button, select, textarea, fieldset');
+const address = adForm.querySelector('#address');
 
-function stateForm() {
-  const formElements = adForm.querySelectorAll('input, button, select, textarea, fieldset');
-  const mapFilters = document.querySelector('.map__filters');
-  const mapFiltersElements = mapFilters.querySelectorAll('input, button, select, textarea, fieldset');
+const sliderElement = adForm.querySelector('.ad-form__slider');
+const valueElement = adForm.querySelector('#price');
 
+
+function deactivateForm() {
   adForm.classList.add('ad-form--disabled');
   formElements.forEach((item) => {
     item.disabled = true;
@@ -16,14 +20,30 @@ function stateForm() {
   });
 }
 
+function activateForm() {
+  adForm.classList.remove('ad-form--disabled');
+  formElements.forEach((item) => {
+    item.disabled = false;
+  });
+
+  mapFilters.classList.remove('map__filters--disabled');
+  mapFiltersElements.forEach((item) => {
+    item.disabled = false;
+  });
+}
+
 
 const messages = {
-  required: "Заполните это поле",
-  email: "Введите корректный адресс",
-  number: "Здесь необходимо число",
-  integer: "Здесь должно быть целое число",
-  url: "Необходимо ввести корректный адрес сайта",
-  tel: "Необходимо ввести корректный номер",
+  required: 'Заполните это поле',
+  email: 'Введите корректный адрес',
+  number: 'Здесь необходимо число',
+  integer: 'Здесь должно быть целое число',
+  url: 'Необходимо ввести корректный адрес сайта',
+  tel: 'Необходимо ввести корректный номер',
+  maxlength: 'Не более ${1} символа',
+  minlength: 'Не менее ${1} символа',
+  min: 'Минимальное значение не должно быть меньше ${1}',
+  max: 'Максимальное значение не должно превышать ${1}',
 };
 
 
@@ -94,7 +114,7 @@ function getRoomsPlaceErrorMessage () {
   if (roomsField.value === '100' && roomsPlace[roomsField.value] !== '0') {
     message = 'Данное размещение "не для гостей"';
   } else {
-    message = 'Выберите количество комнат менее или равноe числу гостей или комнату побольше';
+    message = 'Выберите количество комнат более или равноe числу гостей';
   }
 
   return message;
@@ -134,7 +154,39 @@ const changeType = function() {
 };
 
 typeField.addEventListener('change', changeType);
-priceField.addEventListener('change', changeType);
+
+priceField.addEventListener('change', () => {
+  if (Number(priceField.value) === Number(priceField.value) && priceField.value <= 100000) {
+    sliderElement.noUiSlider.set(priceField.value);
+  }
+
+  changeType();
+});
+
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  animate: true,
+  start: 0,
+  step: 100,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  valueElement.value = sliderElement.noUiSlider.get();
+  changeType();
+});
 
 
 // change timein and timeout
@@ -154,11 +206,11 @@ adForm.addEventListener('submit', (evt) => {
   const isValid = pristine.validate();
 
   if (isValid) {
-    console.log('Можно отправлять');
+    // console.log('Можно отправлять');
   } else {
-    console.log('Форма невалидна');
+    // console.log('Форма невалидна');
   }
 });
 
 
-export {stateForm};
+export {deactivateForm, activateForm, address};
