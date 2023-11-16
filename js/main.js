@@ -1,7 +1,12 @@
-import { deactivateForm, address } from './form.js';
-import { loadMap, getMarkerCoords, marker } from './map.js';
+import { deactivateForm } from './form.js';
+import { loadMap, renderPoints } from './map.js';
+import { getData } from './api.js';
+
+const ADS_COUNT = 15;
 
 deactivateForm();
-
 loadMap();
-getMarkerCoords(address, marker);
+
+getData((offers) => {
+  renderPoints(offers.slice(0, ADS_COUNT));
+});

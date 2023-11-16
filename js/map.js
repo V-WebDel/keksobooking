@@ -1,7 +1,30 @@
-import {activateForm} from './form.js';
-import {similarOffer} from './data.js';
-import {renderAdvertisement} from './render.js';
+import { activateForm, address } from './form.js';
+import { renderAdvertisement } from './render.js';
 
+
+// const ADS = 10;
+const MARKER_CENTER = [35.689439, 139.762659];
+const TOKIO_CENTER = [35.68275, 139.75102];
+const ZOOM = 13;
+
+const map = L.map('map-canvas');
+
+const loadMap = () => {
+  map.on('load', () => {
+    activateForm();
+  })
+    .setView({
+      lat: TOKIO_CENTER[0],
+      lng: TOKIO_CENTER[1],
+    }, ZOOM);
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ).addTo(map);
+};
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -11,8 +34,8 @@ const mainPinIcon = L.icon({
 
 const marker = L.marker(
   {
-    lat: 35.71975,
-    lng: 139.80102,
+    lat: MARKER_CENTER[0],
+    lng: MARKER_CENTER[1],
   },
   {
     draggable: true,
@@ -20,65 +43,56 @@ const marker = L.marker(
   },
 );
 
-function loadMap() {
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      activateForm();
-    })
-    .setView({
-      lat: 35.71975,
-      lng: 139.80102,
-    }, 10);
+const iconAds = L.icon({
+  iconUrl: './img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
 
-  L.tileLayer(
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    },
-  ).addTo(map);
+marker.addTo(map);
 
-  marker.addTo(map);
+marker.on('moveend', (evt) => {
+  address.value = `${evt.target.getLatLng().lat.toFixed(6)}, ${evt.target.getLatLng().lng.toFixed(6)}`;
+});
 
-  const renderPoints = (ads) => {
-    const icon = L.icon({
-      iconUrl: './img/pin.svg',
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
-    });
+const markerGroup = L.layerGroup().addTo(map);
 
-    ads.forEach(({author, offer}) => {
-      const lat = offer.address[0];
-      const lng = offer.address[1];
-      const markers = L.marker({
-        lat,
-        lng,
+const renderPoints = (listOffers) => {
+
+  listOffers.forEach(({author, offer, location}) => {
+    const markerSimple = L.marker(
+      {
+        lat: location.lat,
+        lng: location.lng,
       },
       {
-        icon,
-      });
+        icon: iconAds
+      },
+    );
 
-      markers.addTo(map).bindPopup(renderAdvertisement(author, offer));
-    });
-  };
+    markerSimple
+      .addTo(markerGroup)
+      .bindPopup(renderAdvertisement({author, offer}));
+  });
 
-  renderPoints(similarOffer);
-}
+};
 
+// const renderPoints = (ads) => {
 
-// marker.on('moveend', (evt) => {
-//   console.log(evt.target.getLatLng());
-// });
+//   ads.forEach(({author, offer, location}) => {
+//     const lat = location.lat;
+//     const lng = location.lng;
+//     const markers = L.marker({
+//       lat,
+//       lng,
+//     },
+//     {
+//       iconAds,
+//     });
+
+//     markers.addTo(map).bindPopup(renderAdvertisement({author, offer}));
+//   });
 // };
 
-function getMarkerCoords(input, mark) {
-  let coords = mark.getLatLng();
 
-  input.value = `${coords.lat}, ${coords.lng}`;
-  mark.on('moveend', (evt) => {
-    coords = evt.target.getLatLng();
-    input.value = `${coords.lat}, ${coords.lng}`;
-  });
-}
-
-
-export { loadMap, getMarkerCoords, marker};
+export { loadMap, renderPoints};

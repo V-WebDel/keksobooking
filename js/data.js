@@ -6,7 +6,6 @@ const DESCRIPTION = ['Идеальное место для тех, кто цен
 const AVATAR = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
 const TYPE = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const CHECKIN = ['12:00', '13:00', '14:00'];
-// const CHECKOUT = ['12:00', '13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const PHOTOS = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg', 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
 
@@ -26,7 +25,6 @@ const createOffer = () => {
   const randomLat = getRandomNumber(35.65000, 35.70000, 5);
   const randomLng = getRandomNumber(139.70000, 139.80000, 5);
   const randomCheckin = CHECKIN[getRandomNumber(0, CHECKIN.length - 1, 0)];
-  // const randomCheckout = getRandomNumber(0, CHECKOUT.length - 1, 0);
 
   const randomType = TYPE[getRandomNumber(0, TYPE.length - 1, 0)];
   const randomFeatures = getRandomElements(FEATURES);

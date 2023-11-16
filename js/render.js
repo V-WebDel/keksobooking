@@ -1,8 +1,8 @@
 // const container = document.querySelector('#map-canvas');
 const advTemplate = document.querySelector('#card').content.querySelector('.popup');
 
-const renderAdvertisement = (infoAuthor, infoOffer) => {
-  const [author, offer] = [infoAuthor, infoOffer];
+const renderAdvertisement = ({author, offer}) => {
+  // const [author, offer] = [infoAuthor, infoOffer];
 
   const advElement = advTemplate.cloneNode(true);
   const advAvatar = advElement.querySelector('.popup__avatar');
@@ -17,7 +17,6 @@ const renderAdvertisement = (infoAuthor, infoOffer) => {
 
   const featuresContainer = advElement.querySelector('.popup__features');
   const featuresList = featuresContainer.querySelectorAll('.popup__feature');
-  const modifiers = offer.features.map((features) => `popup__feature--${features}`);
   const photosContainer = advElement.querySelector('.popup__photos');
   const photosItem = photosContainer.querySelector('.popup__photo');
 
@@ -70,30 +69,33 @@ const renderAdvertisement = (infoAuthor, infoOffer) => {
     }
   }
 
-  if(offer.features.length === 0) {
+  if(typeof offer['features'] !== 'undefined') {
+    const modifiers = offer.features.map((features) => `popup__feature--${features}`);
+
+    featuresList.forEach((itemFeatures) => {
+      const modifier = itemFeatures.classList[1];
+
+      if(!modifiers.includes(modifier)) {
+        itemFeatures.remove();
+      }
+    });
+  } else {
     featuresContainer.hidden = true;
   }
 
-  featuresList.forEach((itemFeatures) => {
-    const modifier = itemFeatures.classList[1];
 
-    if(!modifiers.includes(modifier)) {
-      itemFeatures.remove();
-    }
-  });
+  if(typeof offer['photos'] !== 'undefined') {
+    photosItem.remove();
 
-  if(offer.photos.length === 0) {
+    offer.photos.forEach((itemSrc) => {
+      const photo = photosItem.cloneNode(true);
+      photo.src = itemSrc;
+
+      photosContainer.append(photo);
+    });
+  } else {
     photosContainer.hidden = true;
   }
-
-  photosItem.remove();
-
-  offer.photos.forEach((itemSrc) => {
-    const photo = photosItem.cloneNode(true);
-    photo.src = itemSrc;
-
-    photosContainer.append(photo);
-  });
 
   return advElement;
 };
