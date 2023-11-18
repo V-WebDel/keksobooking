@@ -1,6 +1,7 @@
 import { deactivateForm } from './form.js';
 import { loadMap, renderPoints } from './map.js';
 import { getData } from './api.js';
+import './avatar.js';
 
 const ADS_COUNT = 15;
 

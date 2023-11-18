@@ -55,6 +55,8 @@ marker.on('moveend', (evt) => {
   address.value = `${evt.target.getLatLng().lat.toFixed(6)}, ${evt.target.getLatLng().lng.toFixed(6)}`;
 });
 
+address.value = MARKER_CENTER;
+
 const markerGroup = L.layerGroup().addTo(map);
 
 const renderPoints = (listOffers) => {
