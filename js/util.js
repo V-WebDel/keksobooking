@@ -43,4 +43,37 @@ const showErrorMessage = (message) => {
   }, 10000);
 };
 
-export {getRandomNumber, getRandomElements, showErrorMessage};
+
+const showSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+const showErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+const onEscKeydown = (evt, alert) => {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    alert.remove();
+    document.removeEventListener('keydown', (e) => onEscKeydown(e,alert));
+  }
+};
+
+
+const showAlertSuccess = () => {
+  const alertContainer = showSuccessTemplate.cloneNode(true);
+  document.body.append(alertContainer);
+  alertContainer.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    alertContainer.remove();
+  });
+  document.addEventListener('keydown', (evt) => onEscKeydown(evt,alertContainer));
+};
+
+const showAlertError = () => {
+  const alertContainer = showErrorTemplate.cloneNode(true);
+  document.body.append(alertContainer);
+  alertContainer.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    alertContainer.remove();
+  });
+  document.addEventListener('keydown', (evt) => onEscKeydown(evt,alertContainer));
+};
+
+export { getRandomNumber, getRandomElements, showErrorMessage, showAlertError, showAlertSuccess };

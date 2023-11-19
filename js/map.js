@@ -2,7 +2,6 @@ import { activateForm, address } from './form.js';
 import { renderAdvertisement } from './render.js';
 
 
-// const ADS = 10;
 const MARKER_CENTER = [35.689439, 139.762659];
 const TOKIO_CENTER = [35.68275, 139.75102];
 const ZOOM = 13;
@@ -55,7 +54,17 @@ marker.on('moveend', (evt) => {
   address.value = `${evt.target.getLatLng().lat.toFixed(6)}, ${evt.target.getLatLng().lng.toFixed(6)}`;
 });
 
-address.value = MARKER_CENTER;
+
+const resetMap = () => {
+  map.setView({
+    lat: TOKIO_CENTER[0],
+    lng: TOKIO_CENTER[1],
+  }, ZOOM);
+  marker.setLatLng({
+    lat: MARKER_CENTER[0],
+    lng: MARKER_CENTER[1],
+  });
+};
 
 const markerGroup = L.layerGroup().addTo(map);
 
@@ -79,22 +88,5 @@ const renderPoints = (listOffers) => {
 
 };
 
-// const renderPoints = (ads) => {
 
-//   ads.forEach(({author, offer, location}) => {
-//     const lat = location.lat;
-//     const lng = location.lng;
-//     const markers = L.marker({
-//       lat,
-//       lng,
-//     },
-//     {
-//       iconAds,
-//     });
-
-//     markers.addTo(map).bindPopup(renderAdvertisement({author, offer}));
-//   });
-// };
-
-
-export { loadMap, renderPoints};
+export { loadMap, renderPoints, resetMap, MARKER_CENTER };

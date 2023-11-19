@@ -1,4 +1,4 @@
-import { deactivateForm } from './form.js';
+import { deactivateForm, submissionForm, resetForm } from './form.js';
 import { loadMap, renderPoints } from './map.js';
 import { getData } from './api.js';
 import './avatar.js';
@@ -11,3 +11,5 @@ loadMap();
 getData((offers) => {
   renderPoints(offers.slice(0, ADS_COUNT));
 });
+
+// submissionForm(resetForm);

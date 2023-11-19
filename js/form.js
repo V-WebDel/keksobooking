@@ -1,12 +1,22 @@
+import { getData, sendData } from './api.js';
+import { showAlertSuccess, showAlertError } from './util.js';
+import { resetMap, renderPoints, MARKER_CENTER } from './map.js';
+
 const adForm = document.querySelector('.ad-form');
 const formElements = adForm.querySelectorAll('input, button, select, textarea, fieldset');
 const mapFilters = document.querySelector('.map__filters');
 const mapFiltersElements = mapFilters.querySelectorAll('input, button, select, textarea, fieldset');
 const address = adForm.querySelector('#address');
 
+const formSubmit = adForm.querySelector('.ad-form__submit');
+const formReset = adForm.querySelector('.ad-form__reset');
 const sliderElement = adForm.querySelector('.ad-form__slider');
-const valueElement = adForm.querySelector('#price');
+const priceElement = adForm.querySelector('#price');
 
+const previewForm = document.querySelector('.ad-form-header__preview img');
+const wrapPreviewForm = document.querySelector('.ad-form__photo');
+
+const markerString = `${MARKER_CENTER[0]}, ${MARKER_CENTER[1]}`;
 
 function deactivateForm() {
   adForm.classList.add('ad-form--disabled');
@@ -21,6 +31,7 @@ function deactivateForm() {
 }
 
 function activateForm() {
+  address.value = markerString;
   adForm.classList.remove('ad-form--disabled');
   formElements.forEach((item) => {
     item.disabled = false;
@@ -184,7 +195,7 @@ noUiSlider.create(sliderElement, {
 });
 
 sliderElement.noUiSlider.on('update', () => {
-  valueElement.value = sliderElement.noUiSlider.get();
+  priceElement.value = sliderElement.noUiSlider.get();
   changeType();
 });
 
@@ -199,18 +210,78 @@ timeinField.addEventListener('change', changeTime);
 timeoutField.addEventListener('change', changeTime);
 
 
-// submit form
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+// Disabling and Enabling Submit Button
+const disablingSubmitButton = () => {
+  formSubmit.disabled = true;
+  formSubmit.textContent = 'Отправляю...';
+};
 
-  const isValid = pristine.validate();
+const enablingSubmitButton = () => {
+  formSubmit.disabled = false;
+  formSubmit.textContent = 'Опубликовать';
+};
 
-  if (isValid) {
-    console.log('Можно отправлять');
-  } else {
-    console.log('Форма невалидна');
+// Reset Form
+const resetForm = () => {
+  getData((offers) => {
+    renderPoints(offers.slice(0, 15));
+  });
+
+  resetMap();
+
+  adForm.classList.remove('ad-form--disabled');
+  adForm.reset();
+
+  address.value = markerString;
+  sliderElement.noUiSlider.set([1000, null]);
+
+  // formFilterEl.reset();
+
+  const popup = document.querySelector('.leaflet-popup');
+  if (popup) {
+    popup.style.display = 'none';
   }
+
+  previewForm.src = 'img/muffin-grey.svg';
+
+  if (wrapPreviewForm.querySelector('img')) {
+    wrapPreviewForm.querySelector('img').remove();
+  }
+};
+
+
+// Submit Form
+// const submissionForm = async (evt) => {
+//   evt.preventDefault();
+//   const isValid = pristine.validate();
+
+//   if (isValid) {
+//     disablingSubmitButton();
+//     await sendData( showAlertSuccess, showAlertError, new FormData(adForm) );
+//     resetForm();
+//     enablingSubmitButton();
+//   }
+// };
+
+// adForm.addEventListener('submit', submissionForm);
+
+const submissionForm = (cb) => {
+  adForm.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+    // const isValid = pristine.validate();
+
+    if (pristine.validate()) {
+      disablingSubmitButton();
+      await cb(new FormData(adForm));
+      enablingSubmitButton();
+    }
+  });
+};
+
+submissionForm(async (data) => {
+  await sendData(showAlertSuccess, showAlertError, data);
 });
 
+formReset.addEventListener('click', resetForm);
 
-export {deactivateForm, activateForm, address};
+export { deactivateForm, activateForm, submissionForm, resetForm, enablingSubmitButton, address };
