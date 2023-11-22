@@ -1,15 +1,20 @@
-import { deactivateForm, submissionForm, resetForm } from './form.js';
-import { loadMap, renderPoints } from './map.js';
+import { deactivateForm } from './form.js';
+import { setFilter } from './form-filter.js';
+import { loadMap, renderOffers } from './map.js';
 import { getData } from './api.js';
+import { debounce } from './util.js';
 import './avatar.js';
 
-const ADS_COUNT = 15;
+const RERENDER_DELAY = 500;
 
 deactivateForm();
 loadMap();
 
 getData((offers) => {
-  renderPoints(offers.slice(0, ADS_COUNT));
-});
+  renderOffers(offers);
 
-// submissionForm(resetForm);
+  setFilter(debounce(
+    () => renderOffers(offers),
+    RERENDER_DELAY,
+  ));
+});

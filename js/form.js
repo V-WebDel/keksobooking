@@ -1,8 +1,9 @@
 import { getData, sendData } from './api.js';
 import { showAlertSuccess, showAlertError } from './util.js';
-import { resetMap, renderPoints, MARKER_CENTER } from './map.js';
+import { resetMap, renderOffers, MARKER_CENTER } from './map.js';
 
 const adForm = document.querySelector('.ad-form');
+
 const formElements = adForm.querySelectorAll('input, button, select, textarea, fieldset');
 const mapFilters = document.querySelector('.map__filters');
 const mapFiltersElements = mapFilters.querySelectorAll('input, button, select, textarea, fieldset');
@@ -15,6 +16,8 @@ const priceElement = adForm.querySelector('#price');
 
 const previewForm = document.querySelector('.ad-form-header__preview img');
 const wrapPreviewForm = document.querySelector('.ad-form__photo');
+
+const formFilter = document.querySelector('.map__filters');
 
 const markerString = `${MARKER_CENTER[0]}, ${MARKER_CENTER[1]}`;
 
@@ -224,7 +227,7 @@ const enablingSubmitButton = () => {
 // Reset Form
 const resetForm = () => {
   getData((offers) => {
-    renderPoints(offers.slice(0, 15));
+    renderOffers(offers);
   });
 
   resetMap();
@@ -235,7 +238,7 @@ const resetForm = () => {
   address.value = markerString;
   sliderElement.noUiSlider.set([1000, null]);
 
-  // formFilterEl.reset();
+  formFilter.reset();
 
   const popup = document.querySelector('.leaflet-popup');
   if (popup) {
@@ -247,7 +250,10 @@ const resetForm = () => {
   if (wrapPreviewForm.querySelector('img')) {
     wrapPreviewForm.querySelector('img').remove();
   }
+
 };
+
+formReset.addEventListener('click', resetForm);
 
 
 // Submit Form
@@ -265,6 +271,7 @@ const resetForm = () => {
 
 // adForm.addEventListener('submit', submissionForm);
 
+// Submit Form
 const submissionForm = (cb) => {
   adForm.addEventListener('submit', async (evt) => {
     evt.preventDefault();
@@ -282,6 +289,5 @@ submissionForm(async (data) => {
   await sendData(showAlertSuccess, showAlertError, data);
 });
 
-formReset.addEventListener('click', resetForm);
 
 export { deactivateForm, activateForm, submissionForm, resetForm, enablingSubmitButton, address };
